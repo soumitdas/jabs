@@ -1,0 +1,41 @@
+{
+  "name": "jabs-backend",
+  "version": "1.0.0",
+  "description": "backend for JABS",
+  "main": "index.js",
+  "scripts": {
+    "start": "node src/index.js",
+    "dev": "nodemon src/index.js"
+  },
+  "keywords": [
+    "mern",
+    "node",
+    "express",
+    "jabs"
+  ],
+  "author": "Soumit Das",
+  "license": "ISC",
+  "dependencies": {
+    "@azure/storage-blob": "^12.3.0",
+    "argon2": "^0.27.0",
+    "busboy": "^0.3.1",
+    "cookie-parser": "^1.4.5",
+    "cors": "^2.8.5",
+    "express": "^4.17.1",
+    "express-jwt": "^6.0.0",
+    "express-validator": "^6.6.1",
+    "formidable": "^1.2.2",
+    "jsonwebtoken": "^8.5.1",
+    "lodash": "^4.17.20",
+    "mongoose": "^5.10.9",
+    "nodemailer": "^6.4.16",
+    "razorpay": "^2.0.6"
+  },
+  "devDependencies": {
+    "dotenv": "^8.2.0",
+    "nodemon": "^2.0.5"
+  },
+  "engines": {
+    "node": "12.x"
+  }
+}
