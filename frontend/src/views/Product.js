@@ -70,26 +70,26 @@ const Product = () => {
                     </span>
                   </div>
                 ) : (
-                  <div className="block">
-                    <p className="has-text-success-dark has-text-weight-semibold is-size-6">
-                      Special price
+                    <div className="block">
+                      <p className="has-text-success-dark has-text-weight-semibold is-size-6">
+                        Special price
                     </p>
-                    <span className="is-size-3 has-text-weight-bold">
-                      ₹ {product.offerPrice}
-                    </span>
-                    <span className="is-size-5 has-text-grey ml-3">
-                      <s>₹ {product.price}</s>
-                    </span>
-                    <span className="has-text-success-dark has-text-weight-semibold is-size-5 ml-3">
-                      {Math.floor(
-                        ((Number(product.price) - Number(product.offerPrice)) /
-                          Number(product.price)) *
+                      <span className="is-size-3 has-text-weight-bold">
+                        ₹ {product.offerPrice}
+                      </span>
+                      <span className="is-size-5 has-text-grey ml-3">
+                        <s>₹ {product.price}</s>
+                      </span>
+                      <span className="has-text-success-dark has-text-weight-semibold is-size-5 ml-3">
+                        {Math.floor(
+                          ((Number(product.price) - Number(product.offerPrice)) /
+                            Number(product.price)) *
                           100
-                      )}
-                      % off
+                        )}
+                        % off
                     </span>
-                  </div>
-                )}
+                    </div>
+                  )}
                 {product.shortDescription && (
                   <div className="block">
                     <p className="subtitle">{product.shortDescription}</p>
@@ -122,11 +122,11 @@ const Product = () => {
                       Add to Cart
                     </button> */}
                   </p>
-                  <p className="control is-expanded">
+                  {/* <p className="control is-expanded">
                     <button className="button is-medium is-fullwidth">
                       Add to Wistlist
                     </button>
-                  </p>
+                  </p> */}
                 </div>
               </div>
             </div>
@@ -146,10 +146,10 @@ const Product = () => {
             </table>
           </>
         ) : (
-          <div className="has-text-centered mb-6">
-            <h3 className="is-size-3 has-text-weight-semibold">Loading...</h3>
-          </div>
-        )}
+            <div className="has-text-centered mb-6">
+              <h3 className="is-size-3 has-text-weight-semibold">Loading...</h3>
+            </div>
+          )}
       </div>
     </section>
   );

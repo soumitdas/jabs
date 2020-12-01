@@ -13,10 +13,10 @@ const menus = {
     },
   ],
   admin: [
-    {
-      to: "/admin/dashboard",
-      name: "Dashboard",
-    },
+    // {
+    //   to: "/admin/dashboard",
+    //   name: "Dashboard",
+    // },
     {
       to: "/admin/users",
       name: "Users",
@@ -33,10 +33,10 @@ const menus = {
       to: "/admin/categories",
       name: "Product Categories",
     },
-    {
-      to: "/admin/settings",
-      name: "Settings",
-    },
+    // {
+    //   to: "/admin/settings",
+    //   name: "Settings",
+    // },
   ],
 };
 

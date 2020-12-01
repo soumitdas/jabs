@@ -22,6 +22,7 @@ const CheckoutDelivey = ({ address, setAddress, next }) => {
               type="text"
               name="name"
               placeholder="John Corner"
+              minLength="3"
               value={address.name}
               onChange={handleChange}
               required={true}
@@ -36,6 +37,7 @@ const CheckoutDelivey = ({ address, setAddress, next }) => {
               type="text"
               name="street"
               placeholder="Appartment Name, Street etc"
+              minLength="3"
               value={address.street}
               onChange={handleChange}
               required={true}
@@ -50,6 +52,7 @@ const CheckoutDelivey = ({ address, setAddress, next }) => {
                 className="input"
                 type="text"
                 name="city"
+                minLength="2"
                 placeholder="Eg Kolkata"
                 value={address.city}
                 onChange={handleChange}
@@ -65,6 +68,7 @@ const CheckoutDelivey = ({ address, setAddress, next }) => {
                 type="text"
                 name="state"
                 placeholder="Bihar"
+                minLength="3"
                 value={address.state}
                 onChange={handleChange}
                 required={true}
@@ -79,6 +83,8 @@ const CheckoutDelivey = ({ address, setAddress, next }) => {
                 type="text"
                 name="pin"
                 placeholder="700001"
+                minLength="6"
+                maxLength="6"
                 value={address.pin}
                 onChange={handleChange}
                 required={true}
@@ -94,6 +100,8 @@ const CheckoutDelivey = ({ address, setAddress, next }) => {
               type="text"
               name="contactNo"
               placeholder="888888888"
+              minLength="10"
+              maxLength="11"
               value={address.contactNo}
               onChange={handleChange}
               required={true}
