@@ -4,12 +4,27 @@ const blobServiceClient = BlobServiceClient.fromConnectionString(
   process.env.AZURE_STORAGE_CONNECTION_STRING
 );
 
+/**
+ * @description Class representing Azure Blob Storage service
+ */
 class AzureBlobStorage {
+  /**
+   * @param containerName {string} Blob container name
+   */
   constructor(containerName) {
     this.containerName = containerName;
     this.containerClient = blobServiceClient.getContainerClient(containerName);
   }
 
+  /**
+   * @description upload Stream to Azure Blob Storage
+   * @param {object} fileProps blob file properties
+   * @param {ReadableStream} stream Node.js readable stream
+   * @param {number} bufferSize
+   * @param {number} maxConcurrency
+   * @param {object} options Azure Blob options
+   * @returns {Promise<object>}
+   */
   async uploadFileStream(
     fileProps,
     stream,

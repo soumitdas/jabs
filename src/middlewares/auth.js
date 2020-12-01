@@ -1,33 +1,27 @@
 const expressJwt = require("express-jwt");
+const { HttpError } = require("../utils/helper");
 
+/**
+ * @description Middleware to parse, check and verify JWT token in HTTP headers
+ */
 const isSignedIn = expressJwt({
-    secret: process.env.JWT_SECRET,
-    algorithms: ['HS256'],
-    requestProperty: "auth"
+  secret: process.env.JWT_SECRET,
+  algorithms: ["HS256"],
+  requestProperty: "auth",
 });
 
-const isAuthenticated = (req, res, next) => {
-    //TODO: Complete it...
-    
-    next();
-}
+/**
+ * @description Middleware to check Signed-in user Admin or not
+ * @param req {object} Express req object
+ * @param next {function} Express next middleware callback
+ * @returns {void}
+ */
+const isAdmin = (req, _, next) => {
+  const { role } = req.auth;
+  if (role === "admin") {
+    return next();
+  }
+  next(new HttpError(401, "User must be an admin"));
+};
 
-const isAdmin = (req, res, next) => {
-    
-    const { role } = req.auth;
-    if (role === "admin"){
-        return next();
-    }
-    next(new Error("User must be an admin"));
-}
-
-const isSellerOrAdmin = (req, res, next) => {
-    
-    const { role } = req.auth;
-    if (role === "admin" || role === "seller"){
-        return next();
-    }
-    next(new Error("User must be a seller or an admin"));
-}
-
-module.exports = { isSignedIn, isAuthenticated, isAdmin, isSellerOrAdmin }
+module.exports = { isSignedIn, isAdmin };

@@ -1,11 +1,12 @@
 const { Order } = require("../models/order");
 const { matchedData } = require("express-validator");
 const { Cart } = require("../models/cart");
+const { HttpError } = require("../utils/helper");
 
 const { orderConfirm, orderConfirmCOD } = require("../utils/sendEmail");
 
 /**
- * @description Get all the orders for Admins
+ * @description Get all the orders (Admin), paginate using `page` and `limit` query
  * @param req {object} Express req object
  * @param res {object} Express res object
  * @param next {function} Express next middleware callback
@@ -24,7 +25,7 @@ const getAllAdmin = async (req, res, next) => {
       .exec();
 
     if (orders.length < 1) {
-      throw Error("No order found");
+      throw new HttpError(404, "No order found");
     }
 
     const count = await Order.estimatedDocumentCount().exec();
@@ -42,6 +43,14 @@ const getAllAdmin = async (req, res, next) => {
     next(err);
   }
 };
+
+/**
+ * @description Get order data by `orderId` (Admin)
+ * @param req {object} Express req object
+ * @param res {object} Express res object
+ * @param next {function} Express next middleware callback
+ * @returns {Promise<*>}
+ */
 const getByIdAdmin = async (req, res, next) => {
   const { id } = req.params;
 
@@ -51,7 +60,7 @@ const getByIdAdmin = async (req, res, next) => {
       .exec();
 
     if (!order) {
-      throw Error("invalid order id, no order found");
+      throw new HttpError(400, "invalid order id, no order found");
     }
 
     return res.json({
@@ -64,6 +73,13 @@ const getByIdAdmin = async (req, res, next) => {
   }
 };
 
+/**
+ * @description Get all orders of a Signed in user
+ * @param req {object} Express req object
+ * @param res {object} Express res object
+ * @param next {function} Express next middleware callback
+ * @returns {Promise<*>}
+ */
 const getAll = async (req, res, next) => {
   const { id } = req.auth;
   const page = parseInt(req.query.page) || 1;
@@ -78,7 +94,7 @@ const getAll = async (req, res, next) => {
       .exec();
 
     if (orders.length < 1) {
-      throw Error("No order found");
+      throw new HttpError(404, "No order found");
     }
 
     const count = await Order.estimatedDocumentCount().exec();
@@ -97,6 +113,13 @@ const getAll = async (req, res, next) => {
   }
 };
 
+/**
+ * @description Get order data by `orderId` for a Signed-in user
+ * @param req {object} Express req object
+ * @param res {object} Express res object
+ * @param next {function} Express next middleware callback
+ * @returns {Promise<*>}
+ */
 const getById = async (req, res, next) => {
   const { id } = req.auth;
   const { id: orderId } = req.params;
@@ -107,7 +130,7 @@ const getById = async (req, res, next) => {
       .exec();
 
     if (!order) {
-      throw Error("no order found for the user");
+      throw new HttpError(404, "no order found for the user");
     }
 
     return res.json({
@@ -120,6 +143,13 @@ const getById = async (req, res, next) => {
   }
 };
 
+/**
+ * @description Initiate an Order by a Signed-in user
+ * @param req {object} Express req object
+ * @param res {object} Express res object
+ * @param next {function} Express next middleware callback
+ * @returns {Promise<*>}
+ */
 const initiate = async (req, res, next) => {
   const { id } = req.auth;
   const orderObj = matchedData(req, { locations: ["body"] });
@@ -130,7 +160,7 @@ const initiate = async (req, res, next) => {
       .exec();
 
     if (!cart || cart.items.length < 1) {
-      throw Error("cart is not found");
+      throw new HttpError(404, "cart is not found");
     }
 
     let order = new Order({ ...orderObj, items: cart.items, user: id });
@@ -157,6 +187,13 @@ const initiate = async (req, res, next) => {
   }
 };
 
+/**
+ * @description Update payment info in order data by `orderId`
+ * @param req {object} Express req object
+ * @param res {object} Express res object
+ * @param next {function} Express next middleware callback
+ * @returns {Promise<*>}
+ */
 const confirmPayment = async (req, res, next) => {
   const { id } = req.auth;
   const { id: orderId } = req.params;
@@ -170,7 +207,7 @@ const confirmPayment = async (req, res, next) => {
     let order = await Order.findOne({ _id: orderId, user: id }).exec();
 
     if (!order) {
-      throw Error("invalid order id, no order found");
+      throw new HttpError(400, "invalid order id, no order found");
     }
 
     // Check order type and if it is already verified or not
@@ -179,7 +216,7 @@ const confirmPayment = async (req, res, next) => {
       order.status !== "payment-pending" ||
       order.payment.method === "cod"
     ) {
-      throw Error("the order is not valid for this action");
+      throw new HttpError(403, "the order is not valid for this action");
     }
 
     // Verify the payment details with the PG provider
@@ -194,7 +231,7 @@ const confirmPayment = async (req, res, next) => {
       razorpay_signature
     );
     if (!isPaid) {
-      throw Error("payment details were tempered");
+      throw new HttpError(400, "payment details were tempered");
     }
 
     order = await order.save();
@@ -212,6 +249,13 @@ const confirmPayment = async (req, res, next) => {
   }
 };
 
+/**
+ * @description Update order processing actions in order data by `orderId`
+ * @param req {object} Express req object
+ * @param res {object} Express res object
+ * @param next {function} Express next middleware callback
+ * @returns {Promise<*>}
+ */
 const processOrder = async (req, res, next) => {
   const { action } = req.query;
   const { id: orderId } = req.params;
@@ -226,29 +270,29 @@ const processOrder = async (req, res, next) => {
     switch (action) {
       case "approve":
         if (!order.approveOrder()) {
-          throw Error("order cannot be approved");
+          throw new HttpError(403, "order cannot be approved");
         }
         break;
 
       case "cancel":
         if (!order.cancelOrder(remarks)) {
-          throw Error("order cannot be cancelled");
+          throw new HttpError(403, "order cannot be cancelled");
         }
         break;
 
       case "shipment":
         if (!order.addShipment(shipment, remarks)) {
-          throw Error("order cannot be shipped");
+          throw new HttpError(403, "order cannot be shipped");
         }
         break;
 
       case "delivery":
         if (!order.orderDelivey(remarks)) {
-          throw Error("order cannot be delivered");
+          throw new HttpError(403, "order cannot be delivered");
         }
         break;
       default:
-        throw Error("invalid action");
+        throw new HttpError(403, "invalid action");
         break;
     }
 

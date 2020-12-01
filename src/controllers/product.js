@@ -1,13 +1,19 @@
 const Product = require("../models/product");
 const { matchedData } = require("express-validator");
+const { HttpError } = require("../utils/helper");
 
-//TODO: Paginate and Sort later
+/**
+ * @description Get all products data *TODO: paginate & sort*
+ * @param res {object} Express res object
+ * @param next {function} Express next middleware callback
+ * @returns {Promise<*>}
+ */
 const getAll = async (_, res, next) => {
   try {
     const products = await Product.find().populate("category").exec();
 
     if (products.length < 1) {
-      throw new Error("No product found");
+      throw new HttpError(404, "No product found");
     }
 
     return res.json({
@@ -19,6 +25,14 @@ const getAll = async (_, res, next) => {
     next(err);
   }
 };
+
+/**
+ * @description Get product data by `productId`
+ * @param req {object} Express req object
+ * @param res {object} Express res object
+ * @param next {function} Express next middleware callback
+ * @returns {Promise<*>}
+ */
 const getById = async (req, res, next) => {
   try {
     const { id } = req.params;
@@ -26,7 +40,7 @@ const getById = async (req, res, next) => {
     const product = await Product.findById(id).populate("category").exec();
 
     if (!product) {
-      throw new Error("Product not found");
+      throw new HttpError(404, "Product not found");
     }
 
     return res.json({
@@ -39,6 +53,13 @@ const getById = async (req, res, next) => {
   }
 };
 
+/**
+ * @description Create new product (Admin)
+ * @param req {object} Express req object
+ * @param res {object} Express res object
+ * @param next {function} Express next middleware callback
+ * @returns {Promise<*>}
+ */
 const createNew = async (req, res, next) => {
   try {
     const data = matchedData(req, { locations: ["body"] });
@@ -62,6 +83,13 @@ const createNew = async (req, res, next) => {
   }
 };
 
+/**
+ * @description Update a product by `productId` (Admin)
+ * @param req {object} Express req object
+ * @param res {object} Express res object
+ * @param next {function} Express next middleware callback
+ * @returns {Promise<*>}
+ */
 const updateById = async (req, res, next) => {
   try {
     const { id } = req.params;
@@ -75,7 +103,9 @@ const updateById = async (req, res, next) => {
     const product = await Product.findByIdAndUpdate(id, data, {
       new: true,
       useFindAndModify: false,
-    }).populate("category").exec();
+    })
+      .populate("category")
+      .exec();
 
     return res.json({
       status: "SUCCESS",
@@ -87,6 +117,13 @@ const updateById = async (req, res, next) => {
   }
 };
 
+/**
+ * @description Delete a product by `productId` (Admin)
+ * @param req {object} Express req object
+ * @param res {object} Express res object
+ * @param next {function} Express next middleware callback
+ * @returns {Promise<*>}
+ */
 const deleteById = async (req, res, next) => {
   try {
     const { id } = req.params;
@@ -94,7 +131,7 @@ const deleteById = async (req, res, next) => {
     const { deletedCount } = await Product.deleteOne({ _id: id }).exec();
 
     if (!deletedCount) {
-      throw Error("no product found to delete");
+      throw new HttpError(404, "no product found to delete");
     }
 
     return res.json({

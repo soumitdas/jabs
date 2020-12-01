@@ -2,9 +2,15 @@ const { matchedData } = require("express-validator");
 const { HttpError, userResponse } = require("../utils/helper");
 const sendEmail = require("../utils/sendEmail");
 const User = require("../models/user");
-
 const jwt = require("jsonwebtoken");
 
+/**
+ * @description Signup new user and issue signed JWT
+ * @param req {object} Express req object
+ * @param res {object} Express res object
+ * @param next {function} Express next middleware callback
+ * @returns {Promise<*>}
+ */
 const signup = async (req, res, next) => {
   const { getToken } = req.query;
   const userData = matchedData(req, { locations: ["body"] });
@@ -43,6 +49,13 @@ const signup = async (req, res, next) => {
   }
 };
 
+/**
+ * @description Signin user and issue a signed JWT
+ * @param req {object} Express req object
+ * @param res {object} Express res object
+ * @param next {function} Express next middleware callback
+ * @returns {Promise<*>}
+ */
 const signin = async (req, res, next) => {
   try {
     const { email, password, remember } = matchedData(req, {
@@ -62,10 +75,8 @@ const signin = async (req, res, next) => {
     const token = jwt.sign(
       { id: userDoc._id, email: userDoc.email, role: userDoc.role },
       process.env.JWT_SECRET,
-      { expiresIn: remember ? "15d" : "1d", issuer: "JABS" }
+      { expiresIn: remember ? "30d" : "1d", issuer: "JABS" }
     );
-
-    // res.cookie("token", token, { maxAge: 24 * 3600 * 1000 });
 
     return res.json({
       status: "SUCCESS",
@@ -80,8 +91,13 @@ const signin = async (req, res, next) => {
   }
 };
 
+/**
+ * @description Signout a user *TODO: Invalidate the token*
+ * @param req {object} Express req object
+ * @param res {object} Express res object
+ * @returns {void}
+ */
 const signout = (req, res) => {
-  //TODO: Invalidate the token
   return res.json({
     status: "SUCCESS",
     data: {},
@@ -89,6 +105,13 @@ const signout = (req, res) => {
   });
 };
 
+/**
+ * @description Change user password when old password is provided
+ * @param req {object} Express req object
+ * @param res {object} Express res object
+ * @param next {function} Express next middleware callback
+ * @returns {Promise<*>}
+ */
 const changePassword = async (req, res, next) => {
   try {
     const { oldPassword, newPassword } = matchedData(req, {
@@ -121,6 +144,13 @@ const changePassword = async (req, res, next) => {
   }
 };
 
+/**
+ * @description Generate Password reset key and send email link to user
+ * @param req {object} Express req object
+ * @param res {object} Express res object
+ * @param next {function} Express next middleware callback
+ * @returns {Promise<*>}
+ */
 const genPasswordReset = async (req, res, next) => {
   const { email } = matchedData(req, {
     locations: ["body"],
@@ -146,6 +176,13 @@ const genPasswordReset = async (req, res, next) => {
   }
 };
 
+/**
+ * @description Verify password reset key and complete password reset flow
+ * @param req {object} Express req object
+ * @param res {object} Express res object
+ * @param next {function} Express next middleware callback
+ * @returns {Promise<*>}
+ */
 const passwordReset = async (req, res, next) => {
   const { id, key, newPassword } = matchedData(req, {
     locations: ["body"],
@@ -173,6 +210,13 @@ const passwordReset = async (req, res, next) => {
   }
 };
 
+/**
+ * @description Verify user email address
+ * @param req {object} Express req object
+ * @param res {object} Express res object
+ * @param next {function} Express next middleware callback
+ * @returns {Promise<*>}
+ */
 const verify = async (req, res, next) => {
   const { type, uid, key } = matchedData(req, {
     locations: ["query"],
@@ -197,7 +241,7 @@ const verify = async (req, res, next) => {
     res.json({
       status: "SUCCESS",
       data: {},
-      message: `Hello ${userDoc.name}, Your Email is verified sucessfully\nSign-in to continue`
+      message: `Hello ${userDoc.name}, Your Email is verified sucessfully\nSign-in to continue`,
     });
   } catch (err) {
     next(err);
