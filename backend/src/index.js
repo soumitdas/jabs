@@ -19,7 +19,12 @@ mongoose
 
 app.use(express.json());
 app.use(cookieParser());
-app.use(cors());
+app.use(
+  cors({
+    origin: process.env.FRONTEND_BASE_URL,
+    optionsSuccessStatus: 200,
+  })
+);
 app.disable("x-powered-by");
 
 const authRoutes = require("./routes/auth");
@@ -28,11 +33,11 @@ const categoryRoutes = require("./routes/category");
 const productRoutes = require("./routes/product");
 const orderRoutes = require("./routes/order");
 
-app.use("/api/auth", authRoutes);
-app.use("/api/users", userRoutes);
-app.use("/api/categories", categoryRoutes);
-app.use("/api/products", productRoutes);
-app.use("/api/orders", orderRoutes);
+app.use("/auth", authRoutes);
+app.use("/users", userRoutes);
+app.use("/categories", categoryRoutes);
+app.use("/products", productRoutes);
+app.use("/orders", orderRoutes);
 
 // catch 404 and forward to error handler
 app.use(function (req, res, next) {
