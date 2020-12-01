@@ -1,19 +1,8 @@
-const { IncomingForm } = require("formidable");
-
-const formParse = (req, options) => {
-  return new Promise((resolve, reject) => {
-    const form = new IncomingForm(options);
-    form.keepExtensions = true;
-
-    form.parse(req, (err, fields, files) => {
-      if (err) {
-        return reject(err);
-      }
-      return resolve({ fields, files });
-    });
-  });
-};
-
+/**
+ * @description Helper to modify the repsone of user document to the client
+ * @param userObj {object} Mongoose user document
+ * @returns {object} user response object
+ */
 const userResponse = (userObj) => {
   return {
     id: userObj._id,
@@ -29,9 +18,14 @@ const userResponse = (userObj) => {
   };
 };
 
+/**
+ * @description Custom Nodejs exception constructor
+ * @param {number} statusCode HTTP status code
+ * @param {string} message Exception message
+ */
 function HttpError(statusCode, message) {
   this.statusCode = statusCode;
   this.message = message;
 }
 
-module.exports = { userResponse, formParse, HttpError };
+module.exports = { userResponse, HttpError };

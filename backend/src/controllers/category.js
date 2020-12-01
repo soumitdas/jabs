@@ -1,6 +1,14 @@
 const Category = require("../models/category");
 const { matchedData } = require("express-validator");
+const { HttpError } = require("../utils/helper");
 
+/**
+ * @description Get category data by `categoryId`
+ * @param req {object} Express req object
+ * @param res {object} Express res object
+ * @param next {function} Express next middleware callback
+ * @returns {Promise<*>}
+ */
 const getById = async (req, res, next) => {
   try {
     const { id } = req.params;
@@ -8,7 +16,7 @@ const getById = async (req, res, next) => {
     const category = await Category.findById(id).exec();
 
     if (!category) {
-      throw new Error("Category not found");
+      throw new HttpError(404, "Category not found");
     }
     return res.json({
       status: "SUCCESS",
@@ -19,13 +27,21 @@ const getById = async (req, res, next) => {
     next(err);
   }
 };
+
+/**
+ * @description Get all categories
+ * @param req {object} Express req object
+ * @param res {object} Express res object
+ * @param next {function} Express next middleware callback
+ * @returns {Promise<*>}
+ */
 const getAll = async (_, res, next) => {
   // TODO: Paginate and Sort
   try {
     const categories = await Category.find().exec();
 
     if (categories.length < 1) {
-      throw new Error("No category found");
+      throw new HttpError(404, "No category found");
     }
 
     return res.json({
@@ -37,6 +53,14 @@ const getAll = async (_, res, next) => {
     next(err);
   }
 };
+
+/**
+ * @description Update category data by `categoryId` (Admin)
+ * @param req {object} Express req object
+ * @param res {object} Express res object
+ * @param next {function} Express next middleware callback
+ * @returns {Promise<*>}
+ */
 const updateById = async (req, res, next) => {
   try {
     const { id } = req.params;
@@ -56,6 +80,14 @@ const updateById = async (req, res, next) => {
     next(err);
   }
 };
+
+/**
+ * @description Delete category data by `categoryId` (Admin)
+ * @param req {object} Express req object
+ * @param res {object} Express res object
+ * @param next {function} Express next middleware callback
+ * @returns {Promise<*>}
+ */
 const deleteById = async (req, res, next) => {
   try {
     const { id } = req.params;
@@ -63,7 +95,7 @@ const deleteById = async (req, res, next) => {
     const { deletedCount } = await Category.deleteOne({ _id: id }).exec();
 
     if (!deletedCount) {
-      throw Error("no category found to delete");
+      throw new HttpError(404, "no category found to delete");
     }
 
     return res.json({
@@ -76,6 +108,13 @@ const deleteById = async (req, res, next) => {
   }
 };
 
+/**
+ * @description Create new category (Admin)
+ * @param req {object} Express req object
+ * @param res {object} Express res object
+ * @param next {function} Express next middleware callback
+ * @returns {Promise<*>}
+ */
 const createNew = async (req, res, next) => {
   try {
     const data = matchedData(req, { locations: ["body"] });

@@ -1,7 +1,11 @@
 const EmailService = require("../services/email");
-
 const BASE_URL = process.env.FRONTEND_BASE_URL;
 
+/**
+ * @description User email verification email constructor
+ * @param {object} emailObj Email object contains details
+ * @returns {Promise<*>}
+ */
 const emailVerification = async ({ id, name, email, emailVerify }) => {
   try {
     const url = `${BASE_URL}/auth-verify?type=email&uid=${id}&key=${emailVerify.key}`;
@@ -13,6 +17,11 @@ const emailVerification = async ({ id, name, email, emailVerify }) => {
   }
 };
 
+/**
+ * @description User password reset email constructor
+ * @param {object} emailObj Email object contains details
+ * @returns {Promise<*>}
+ */
 const passwordReset = async ({ _id: id, name, email, passwordReset }) => {
   try {
     const url = `${BASE_URL}/auth-verify?type=reset-password&uid=${id}&key=${passwordReset.key}`;
@@ -24,6 +33,11 @@ const passwordReset = async ({ _id: id, name, email, passwordReset }) => {
   }
 };
 
+/**
+ * @description Order confirmation email constructor for COD orders
+ * @param {object} emailObj Email object contains details
+ * @returns {Promise<*>}
+ */
 const orderConfirmCOD = async ({
   _id,
   user,
@@ -44,6 +58,11 @@ const orderConfirmCOD = async ({
   }
 };
 
+/**
+ * @description Order confirmation email constructor for prepaid orders
+ * @param {object} emailObj Email object contains details
+ * @returns {Promise<*>}
+ */
 const orderConfirm = async ({
   _id,
   user,

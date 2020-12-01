@@ -43,20 +43,23 @@ const addressSchema = new mongoose.Schema(
   {
     name: {
       type: String,
+      minlength: 3,
       required: true,
     },
     street: {
       type: String,
+      minlength: 3,
       required: true,
     },
     city: {
       type: String,
-      minlength: 3,
+      minlength: 2,
       maxlength: 20,
       required: true,
     },
     state: {
       type: String,
+      minlength: 3,
       required: true,
     },
     pin: {

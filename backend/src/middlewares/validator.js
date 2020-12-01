@@ -11,7 +11,7 @@ const signupRoute = [
   check("password")
     .exists()
     .bail()
-    .isAlphanumeric()
+    .isString()
     .isLength({ min: 5, max: 100 })
     .withMessage("invalid password format"),
 ];
@@ -21,7 +21,7 @@ const signinRoute = [
   check("password")
     .exists()
     .bail()
-    .isAlphanumeric()
+    .isString()
     .isLength({ min: 5, max: 100 })
     .withMessage("invalid password format"),
   check("remember")
@@ -34,13 +34,13 @@ const changePasswordRoute = [
   check("oldPassword")
     .exists()
     .bail()
-    .isAlphanumeric()
+    .isString()
     .isLength({ min: 5, max: 100 })
     .withMessage("invalid oldPassword format"),
   check("newPassword")
     .exists()
     .bail()
-    .isAlphanumeric()
+    .isString()
     .isLength({ min: 5, max: 100 })
     .withMessage("invalid newPassword format"),
 ];
@@ -55,7 +55,7 @@ const passwordResetRoute = [
   check("newPassword")
     .exists()
     .bail()
-    .isAlphanumeric()
+    .isString()
     .isLength({ min: 5, max: 100 })
     .withMessage("invalid password format"),
 ];
@@ -95,7 +95,7 @@ const newProductRoute = [
     .exists()
     .bail()
     .isString()
-    .isLength({ min: 2, max: 50 })
+    .isLength({ min: 2, max: 100 })
     .withMessage("invalid product name"),
   check("shortDescription")
     .optional()
@@ -133,7 +133,7 @@ const editProductRoute = [
     .exists()
     .bail()
     .isString()
-    .isLength({ min: 2, max: 50 })
+    .isLength({ min: 2, max: 100 })
     .withMessage("invalid product name"),
   check("shortDescription")
     .optional()

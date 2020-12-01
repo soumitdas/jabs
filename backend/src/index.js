@@ -4,10 +4,10 @@ if (process.env.NODE_ENV !== "production") {
 
 const mongoose = require("mongoose");
 const express = require("express");
-const cookieParser = require("cookie-parser");
 const cors = require("cors");
-const app = express();
+const { HttpError } = require("./utils/helper");
 
+const app = express();
 mongoose
   .connect(process.env.MONGODB_URI, {
     useNewUrlParser: true,
@@ -18,7 +18,6 @@ mongoose
   .catch((e) => console.error(e));
 
 app.use(express.json());
-app.use(cookieParser());
 app.use(
   cors({
     origin: process.env.FRONTEND_BASE_URL,
@@ -40,17 +39,18 @@ app.use("/products", productRoutes);
 app.use("/orders", orderRoutes);
 
 // catch 404 and forward to error handler
-app.use(function (req, res, next) {
-  const err = new Error("Not Found");
+app.use((req, res, next) => {
+  const err = new HttpError(404, "Not Found");
   next(err);
 });
 
 // Error Handelling
 app.use((err, req, res, next) => {
   if (err) {
-    const statusCode = err.name === "UnauthorizedError" ? 401 : 400;
-
-    return res.status(statusCode).json({
+    if (!err.statusCode) {
+      err.statusCode = err.name === "UnauthorizedError" ? 401 : 400;
+    }
+    return res.status(err.statusCode).json({
       status: "ERROR",
       data: {},
       message: err.message,

@@ -10,11 +10,28 @@ const smtpTransporter = nodemailer.createTransport({
   },
 });
 
+/**
+ * @description Email service using nodemailer package
+ */
 class EmailService {
+  /**
+   *
+   * @param {*} transporter nodemailer Mail transporter
+   * @param {string} fromName From Email
+   * @param {string} fromEmail From Name
+   */
   constructor(transporter, fromName, fromEmail) {
     this.transporter = transporter;
     this.from = `"${fromName}" <${fromEmail}>`;
   }
+
+  /**
+   *
+   * @param {string} to To email
+   * @param {string} subject Subject of the email
+   * @param {string} text Text body of email
+   * @param {string} html Html body of email
+   */
   send(to, subject, text, html) {
     return this.transporter.sendMail({
       from: this.from,

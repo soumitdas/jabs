@@ -1,6 +1,14 @@
 const Busboy = require("busboy");
 const AzureBlobStorage = require("../services/azureBlobStorage");
 
+/**
+ * @description Parse multipart/form data using busboy and stream it to Azure blob
+ * @param {object} req Express request object
+ * @param {object} busboyParams Busboy config params
+ * @param {number} maxSize Max filesize in bytes
+ * @param {Array} mimeAcceptedList acceptable mime formats
+ * @param {object} azureConfig Azure blob config params
+ */
 const busboyParseAndUpload = (
   req,
   busboyParams,

@@ -1,5 +1,12 @@
 const { validationResult } = require("express-validator");
 
+/**
+ * @description Catch error from express-validator middlewere and send error response to client
+ * @param req {object} Express req object
+ * @param res {object} Express res object
+ * @param next {function} Express next middleware callback
+ * @returns {void}
+ */
 module.exports = (req, res, next) => {
   const errorFormatter = ({ location, msg, param, value, nestedErrors }) => {
     // Build your resulting errors however you want! String, object, whatever - it works!

@@ -25,7 +25,6 @@
 - GET /{userId} to get the user with `userId` (Admin)
 - PUT /{userId} to update the user with `userId` (Admin)
 - DELETE /{userId} to delete the user with `userId` (Admin)
-
 - GET /cart to get User Cart (Auth)
 - POST /cart to add/modify User Cart (Auth)
 - PUT /cart to update User Cart (Auth)
@@ -58,3 +57,8 @@
 - GET /{orderId} to get order details with `orderId` (Admin)
 - PUT /{orderId} to update order details with `orderId` (Admin)
 - DELETE /{orderId} to delete an order with `orderId` (Admin) [TODO]
+
+## TODOs
+
+- Implement Automated Testing
+- Implement Automated Deployment
