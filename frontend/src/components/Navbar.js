@@ -72,7 +72,7 @@ const Navbar = () => {
               ) : (
                 <div className="navbar-item">
                   <button onClick={toggleModal} className="button is-link">
-                    Sign in
+                    Sign in / Sign up
                   </button>
                 </div>
               )}

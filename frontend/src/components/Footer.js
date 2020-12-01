@@ -21,6 +21,9 @@ const Footer = () => {
             <div className="level-item">
               <Link to="/refund">Refund Policy</Link>
             </div>
+            <div className="level-item">
+              <Link to="/disclaimer">Disclaimer</Link>
+            </div>
           </div>
           <div className="level-right">
             <div className="level-item">

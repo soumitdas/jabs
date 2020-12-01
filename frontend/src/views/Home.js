@@ -14,9 +14,9 @@ const Home = () => {
           </div>
         ) : products.length > 0 ? (
           <>
-            <div className="has-text-centered mb-6">
+            {/* <div className="has-text-centered mb-6">
               <h3 className="is-size-3 has-text-weight-semibold">Products</h3>
-            </div>
+            </div> */}
             <div className="columns is-multiline">
               {products.map((product, index) => {
                 return (

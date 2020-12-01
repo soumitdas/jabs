@@ -26,6 +26,7 @@ import AuthVerify from "../views/AuthVerify";
 import Terms from "../views/Terms";
 import Privacy from "../views/Privacy";
 import Refund from "../views/Refund";
+import Disclaimer from "../views/Disclaimer";
 import TrackOrderAdmin from "../views/admin/TrackOrder";
 import AdminUsers from "../views/admin/Users";
 import NotFound from "../views/NotFound";
@@ -103,6 +104,9 @@ const Routes = () => {
           </Route>
           <Route path="/refund">
             <Refund />
+          </Route>
+          <Route path="/disclaimer">
+            <Disclaimer />
           </Route>
           <Route path="*">
             <NotFound />
