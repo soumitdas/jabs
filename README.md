@@ -70,6 +70,7 @@ Set the environment variable in `.env` file at `frontend` directory.
 ```bash
 REACT_APP_API_BASE_URL=http://localhost:4000
 REACT_APP_RAZORPAY_KEY=razorpay_public_key
+REACT_APP_GOOGLE_CLIENT_ID=google_oauth_client_id_here
 ```
 
 #### Backend
@@ -85,6 +86,7 @@ SMTP_PASSWORD=
 AZURE_STORAGE_CONNECTION_STRING=
 RAZORPAY_API_KEY=
 RAZORPAY_API_SECRET=
+GOOGLE_CLIENT_ID=
 ```
 
 ### Run

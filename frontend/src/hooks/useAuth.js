@@ -57,6 +57,14 @@ function useProvideAuth() {
     });
   };
 
+  const googleSignin = (idToken) => {
+    return authApi.googleSignin(idToken).then((resp) => {
+      setUser(resp.data.user);
+      setToken(resp.data.token);
+      return resp.data;
+    });
+  };
+
   const signup = ({ name, email, password }) => {
     return authApi.signup(name, email, password).then((resp) => {
       if (resp.data.user && resp.data.token) {
@@ -88,6 +96,7 @@ function useProvideAuth() {
     user,
     token: getToken(),
     signin,
+    googleSignin,
     signup,
     signout,
     changePassword,

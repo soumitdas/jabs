@@ -49,6 +49,8 @@ router.get(
   AuthController.verify
 );
 
+router.post("/google", AuthController.googleHandler);
+
 router.get("/signout", AuthController.signout);
 
 module.exports = router;

@@ -16,6 +16,7 @@
 - POST /reset-password to complete the password reset
 - POST /change-password to change user password (Auth)
 - POST /verify to verify user email
+- POST /google to authenticate a user using Google Oauth2
 
 ### /api/users
 
