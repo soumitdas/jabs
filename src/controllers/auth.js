@@ -1,5 +1,6 @@
 const { matchedData } = require("express-validator");
 const { HttpError, userResponse } = require("../utils/helper");
+const { verifyIdToken } = require("../utils/googleOAuth2");
 const sendEmail = require("../utils/sendEmail");
 const User = require("../models/user");
 const jwt = require("jsonwebtoken");
@@ -83,6 +84,64 @@ const signin = async (req, res, next) => {
       data: {
         user: userResponse(userDoc),
         token,
+      },
+      message: "Logged in success",
+    });
+  } catch (err) {
+    next(err);
+  }
+};
+
+/**
+ * @description Signin or Signup user using Google OAuth
+ * @param req {object} Express req object
+ * @param res {object} Express res object
+ * @param next {function} Express next middleware callback
+ * @returns {Promise<*>}
+ */
+const googleHandler = async (req, res, next) => {
+  try {
+    const { token } = req.body;
+
+    if (!token) {
+      throw new HttpError(422, "`token` missing from request body");
+    }
+
+    const {
+      name,
+      email,
+      email_verified,
+      picture,
+      at_hash,
+    } = await verifyIdToken(token);
+
+    let userDoc = await User.findOne({ email }).exec();
+
+    // Email does not exists -> new user
+    if (!userDoc) {
+      userDoc = new User({
+        name,
+        email,
+        isEmailVerified: email_verified,
+        avatarURL: picture,
+        password: at_hash, // TODO: password should not be here
+      });
+      await userDoc.setHashedPassword();
+      await userDoc.save();
+    }
+
+    // Generate auth token
+    const authToken = jwt.sign(
+      { id: userDoc._id, email: userDoc.email, role: userDoc.role },
+      process.env.JWT_SECRET,
+      { expiresIn: "30d", issuer: "JABS" }
+    );
+
+    return res.json({
+      status: "SUCCESS",
+      data: {
+        user: userResponse(userDoc),
+        token: authToken,
       },
       message: "Logged in success",
     });
@@ -251,6 +310,7 @@ const verify = async (req, res, next) => {
 module.exports = {
   signup,
   signin,
+  googleHandler,
   signout,
   changePassword,
   genPasswordReset,
