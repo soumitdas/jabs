@@ -23,6 +23,7 @@
     "express": "^4.17.1",
     "express-jwt": "^6.0.0",
     "express-validator": "^6.6.1",
+    "google-auth-library": "^6.1.4",
     "jsonwebtoken": "^8.5.1",
     "mongoose": "^5.10.9",
     "nodemailer": "^6.4.16",
