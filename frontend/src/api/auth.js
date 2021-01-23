@@ -14,6 +14,16 @@ export default {
     });
     return await handleFetchApiResponse(r);
   },
+  async googleSignin(token) {
+    const r = await fetch(`${url}/google`, {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify({ token }),
+    });
+    return await handleFetchApiResponse(r);
+  },
   async signup(name, email, password) {
     const r = await fetch(`${url}/signup?getToken=true`, {
       method: "POST",
