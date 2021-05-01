@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 
 export default function useLocalStorage(key, initialValue) {
   // State to store our value
@@ -15,6 +15,21 @@ export default function useLocalStorage(key, initialValue) {
       return initialValue;
     }
   });
+
+  const storageListener = (e) => {
+    if (e.key === key) {
+      try {
+        const item = JSON.parse(e.newValue);
+        setStoredValue(item);
+      } catch {
+        //TODO: Handle the catch, right now do nothing
+      }
+    }
+  }
+  useEffect(() => {
+    window.addEventListener("storage", storageListener);
+    return () => window.removeEventListener("storage", storageListener);
+  }, [])
 
   // Return a wrapped version of useState's setter function that ...
   // ... persists the new value to localStorage.
